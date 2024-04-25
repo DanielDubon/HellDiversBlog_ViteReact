@@ -23,6 +23,52 @@
             <button type="submit">Iniciar sesión</button>
         </form>
     </div>
+
+
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe normalmente
+
+            // Obtiene los valores del formulario
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Crea un objeto con los datos del formulario
+            const formData = {
+                username: username,
+                password: password
+            };
+
+            // Realiza una solicitud Fetch a tu endpoint de inicio de sesión
+            fetch('/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Maneja la respuesta de la API
+                    if (data.success) {
+                        // Si el inicio de sesión fue exitoso, redirecciona al usuario a otra página
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        // Si el inicio de sesión fallo, muestra un mensaje de error al usuario
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    // Maneja los errores de la solicitud
+                    console.error('Error al iniciar sesión:', error);
+                    alert('Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.');
+                });
+        });
+    </script>
+
+
+
 </body>
 
 </html>
