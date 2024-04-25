@@ -1,13 +1,186 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <script src="https://unpkg.com/prop-types/prop-types.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vites + React</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    document.body.style.backgroundColor = '#000';
+
+    const Header = () => {
+      const styles = {
+        textAlign: 'center',
+        padding: '20px',
+        backgroundColor: '#226767',
+        position: 'fixed',
+        top: '0',
+        width: '100%',
+        zIndex: '1000'
+      }
+      return (
+        <header style={styles}>
+          SUPER EARTH BLOG HELLDIVERS HQ
+        </header>
+      )
+    }
+
+    const Footer = () => {
+      const styles = {
+        textAlign: 'center',
+        padding: '20px',
+        backgroundColor: '#226767',
+        position: 'fixed',
+        bottom: '0',
+        width: '100%',
+        zIndex: '1000'
+      }
+      return (
+        <footer style={styles}>
+          Copyright 2024 SUPER EARTH
+        </footer>
+      )
+    }
+
+    const Post = ({ title, body, planet, enemy, urgency }) => {
+      const styles = {
+        backgroundColor: 'lightgrey',
+        padding: '10px',
+        margin: '10px',
+        borderRadius: '5px'
+      }
+      return (
+        <li style={styles}>
+          <h1>{title}</h1>
+          <p>{body}</p>
+          <p>Planet: {planet}</p>
+          <p>Enemy: {enemy}</p>
+          <p>Urgency: {urgency}</p>
+        </li>
+      )
+    }
+
+    Post.propTypes = {
+      title: PropTypes.string.isRequired,
+      body: PropTypes.string.isRequired,
+      planet: PropTypes.string.isRequired,
+      enemy: PropTypes.string.isRequired,
+      urgency: PropTypes.string.isRequired,
+    };
+
+    const Posts = () => {
+      const [posts, setPosts] = React.useState([])
+      const [loading, setLoading] = React.useState(true)
+
+      const getPosts = async () => {
+        try {
+          const apiResponse = await fetch('https://api.tiburoncin.lat/22233/posts')
+          const jsonPosts = await apiResponse.json()
+          const formattedPosts = jsonPosts.map(post => ({
+            title: post.title,
+            body: post.content,
+            planet: post.planet,
+            enemy: post.enemy,
+            urgency: post.urgency
+          }))
+          setPosts(formattedPosts)
+        } catch (error) {
+          console.error("Error fetching posts:", error)
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      React.useEffect(() => {
+        getPosts()
+      }, [])
+
+      const styles = {
+        listStyleType: 'none',
+        padding: '0',
+      }
+
+      const loadingStyle = {
+        border: "16px solid #f3f3f3", // Light grey
+        borderTop: "16px solid #3498db", // Blue
+        borderRadius: "50%",
+        width: "120px",
+        height: "120px",
+        animation: "spin 2s linear infinite"
+      }
+
+      const Loading = () => (
+
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <div style={loadingStyle}></div>
+        </div>
+
+      )
+
+      if (loading) {
+        return <Loading />;
+      }
+
+      if (posts.length === 0) {
+        return (
+          <div style={{ textAlign: 'center', padding: '20px', color: 'white' }}>
+            No hay noticias de la super tierra disponibles.
+          </div>
+        );
+      }
+
+      return (
+        <ul style={styles}>
+          {posts.map(({ title, body, planet, enemy, urgency }, index) => (
+            <Post
+              key={index}
+              title={title}
+              body={body}
+              planet={planet}
+              enemy={enemy}
+              urgency={urgency}
+            />
+          ))}
+        </ul>
+      )
+    }
+
+    const App = () => {
+      const styles = {
+        padding: '20px',
+        display: 'grid',
+        gridTemplateRows: 'auto 1fr auto',
+        minHeight: '100vh',
+        paddingTop: '60px',
+        paddingBottom: '60px',
+        boxSizing: 'border-box',
+
+      }
+      return (
+        <main style={styles}>
+          <Header />
+          <Posts />
+          <Footer />
+
+        </main>
+      )
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'))
+    root.render(<App />)
+
+
+  </script>
+</body>
+
 </html>
