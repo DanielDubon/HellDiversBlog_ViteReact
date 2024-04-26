@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+        }
+
+        h2 {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        h3 {
+            margin-top: 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        form div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 10px;
+            padding: 10px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: lightgrey;
+            margin: '10px',
+
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+
+</head>
+
+
+<body>
+    <h1>¡Panel de Administración General HellDiver!</h1>
+
+    <!-- Formulario para crear nuevas publicaciones -->
+    <h2>Crear Nueva Publicación</h2>
+    <form id="create-post-form">
+        <div>
+            <label for="post-title">Título:</label>
+            <input type="text" id="post-title" required>
+        </div>
+        <div>
+            <label for="post-content">Contenido:</label>
+            <textarea id="post-content" required></textarea>
+        </div>
+        <div>
+            <label for="post-planet">Planeta:</label>
+            <input type="text" id="post-planet" required>
+        </div>
+        <div>
+            <label for="post-enemy">Enemigo:</label>
+            <input type="text" id="post-enemy" required>
+        </div>
+        <div>
+            <label for="post-urgency">Urgencia:</label>
+            <input type="text" id="post-urgency" required>
+        </div>
+        <button type="submit">Crear Publicación</button>
+    </form>
+
+
+
+    <!-- Formulario para actualizar posts -->
+    <h2>Actualizar Publicación</h2>
+    <form id="update-post-form">
+        <div>
+            <label for="update-post-id">ID de la Publicación:</label>
+            <input type="number" id="update-post-id" required>
+        </div>
+        <div>
+            <label for="update-post-title">Nuevo Título:</label>
+            <input type="text" id="update-post-title" required>
+        </div>
+        <div>
+            <label for="update-post-content">Nuevo Contenido:</label>
+            <textarea id="update-post-content" required></textarea>
+        </div>
+        <div>
+            <label for="update-post-planet">Nuevo Planeta:</label>
+            <input type="text" id="update-post-planet" required>
+        </div>
+        <div>
+            <label for="update-post-enemy">Nuevo Enemigo:</label>
+            <input type="text" id="update-post-enemy" required>
+        </div>
+        <div>
+            <label for="update-post-urgency">Nueva Urgencia:</label>
+            <input type="text" id="update-post-urgency" required>
+        </div>
+        <button type="submit">Actualizar Publicación</button>
+    </form>
+
+    <h2>Eliminar Publicación</h2>
+    <form id="delete-post-form">
+        <div>
+            <label for="delete-post-id">ID de la Publicación a Eliminar:</label>
+            <input type="number" id="delete-post-id" required>
+        </div>
+        <button type="submit">Eliminar Publicación</button>
+    </form>
+
+
+
+    <!-- Lista de publicaciones existentes -->
+    <h3>Publicaciones Existentes:</h3>
+    <ul id="post-list">
+        <!-- Aquí se cargarán las publicaciones existentes -->
+    </ul>
+
+    <script>
+        async function getPosts() {
+            try {
+                const response = await fetch('https://api.tiburoncin.lat/22233/posts');
+                const posts = await response.json();
+
+                const postList = document.getElementById('post-list');
+
+                // Limpiar la lista de publicaciones antes de agregar las nuevas
+                postList.innerHTML = '';
+
+                // Iterar sobre las publicaciones y agregarlas a la lista
+                posts.forEach(post => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Título: ${post.title}, Contenido: ${post.content}, Planeta: ${post.planet}, Enemigo: ${post.enemy}, Urgencia: ${post.urgency}`;
+                    postList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error al obtener las publicaciones:', error);
+            }
+        }
+
+        // Llamar a la función para obtener y mostrar las publicaciones existentes al cargar la página
+        getPosts();
+
+        // Agregar evento de envío al formulario de creación de publicación
+        document.getElementById('create-post-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe normalmente
+
+            // Obtener los datos del formulario
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const planet = document.getElementById('post-planet').value;
+            const enemy = document.getElementById('post-enemy').value;
+            const urgency = document.getElementById('post-urgency').value;
+
+            // Crear un objeto con los datos del formulario
+            const postData = {
+                title: title,
+                content: content,
+                planet: planet,
+                enemy: enemy,
+                urgency: urgency
+            };
+
+            try {
+                // Realizar una solicitud Fetch para enviar los datos al servidor
+                const response = await fetch('https://api.tiburoncin.lat/22233/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                const data = await response.json();
+
+                // Si la publicación fue creada exitosamente, muestra un mensaje de éxito
+                alert('La publicación se creó correctamente.');
+                // Opcional: redirecciona a la página de visualización de publicaciones
+                window.location.href = '/dashboard.html';
+
+            } catch (error) {
+                // Si ocurrió un error al crear la publicación, muestra un mensaje de error
+                console.error('Error al crear la publicación:', error);
+                alert('Error al crear la publicación. Por favor, inténtalo de nuevo más tarde.');
+            }
+
+
+
+
+        });
+
+        document.getElementById('update-post-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe normalmente
+
+            // Obtener los datos del formulario
+            const postId = document.getElementById('update-post-id').value;
+            const title = document.getElementById('update-post-title').value;
+            const content = document.getElementById('update-post-content').value;
+            const planet = document.getElementById('update-post-planet').value;
+            const enemy = document.getElementById('update-post-enemy').value;
+            const urgency = document.getElementById('update-post-urgency').value;
+
+            // Crear un objeto con los datos del formulario
+            const postData = {
+                title: title,
+                content: content,
+                planet: planet,
+                enemy: enemy,
+                urgency: urgency
+            };
+
+            try {
+                // Realizar una solicitud Fetch para actualizar la publicación
+                const response = await fetch(`https://api.tiburoncin.lat/22233/posts/${postId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                // Verificar si la solicitud fue exitosa
+                if (response.ok) {
+                    alert('La publicación se actualizó correctamente.');
+                    // Actualizar la lista de publicaciones después de actualizar una existente
+                    getPosts();
+                } else {
+                    alert('Error al actualizar la publicación. Por favor, inténtalo de nuevo más tarde.');
+                }
+            } catch (error) {
+                console.error('Error al actualizar la publicación:', error);
+                alert('Error al actualizar la publicación. Por favor, inténtalo de nuevo más tarde.');
+            }
+        });
+
+
+        document.getElementById('delete-post-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Evita que el formulario se envíe normalmente
+
+            // Obtener el ID de la publicación a eliminar
+            const postId = document.getElementById('delete-post-id').value;
+
+            try {
+                // Realizar una solicitud Fetch para eliminar la publicación
+                const response = await fetch(`https://api.tiburoncin.lat/22233/posts/${postId}`, {
+                    method: 'DELETE'
+                });
+
+                // Verificar si la solicitud fue exitosa
+                if (response.ok) {
+                    alert('La publicación se eliminó correctamente.');
+                    // Actualizar la lista de publicaciones después de eliminar una existente
+                    getPosts();
+                } else {
+                    alert('Error al eliminar la publicación. Por favor, inténtalo de nuevo más tarde.');
+                }
+            } catch (error) {
+                console.error('Error al eliminar la publicación:', error);
+                alert('Error al eliminar la publicación. Por favor, inténtalo de nuevo más tarde.');
+            }
+        });
+
+
+    </script>
+
+</body>
+
+</html>
