@@ -52,13 +52,17 @@
       )
     }
 
-    const Post = ({ title, body, planet, enemy, urgency }) => {
+    const Post = ({ title, body, planet, enemy, urgency, date }) => {
       const styles = {
         backgroundColor: 'lightgrey',
         padding: '10px',
         margin: '10px',
         borderRadius: '5px'
-      }
+      };
+
+
+      const formattedDate = date ? new Date(date).toLocaleString() : 'Fecha no disponible';
+
       return (
         <li style={styles}>
           <h1>{title}</h1>
@@ -66,9 +70,11 @@
           <p>Planet: {planet}</p>
           <p>Enemy: {enemy}</p>
           <p>Urgency: {urgency}</p>
+          <p>Date: {formattedDate}</p>
         </li>
-      )
-    }
+      );
+    };
+
 
     Post.propTypes = {
       title: PropTypes.string.isRequired,
@@ -76,6 +82,7 @@
       planet: PropTypes.string.isRequired,
       enemy: PropTypes.string.isRequired,
       urgency: PropTypes.string.isRequired,
+      date: PropTypes.string
     };
 
     const Posts = () => {
@@ -84,22 +91,23 @@
 
       const getPosts = async () => {
         try {
-          const apiResponse = await fetch('https://api.tiburoncin.lat/22233/posts')
-          const jsonPosts = await apiResponse.json()
+          const apiResponse = await fetch('https://api.tiburoncin.lat/22233/posts');
+          const jsonPosts = await apiResponse.json();
           const formattedPosts = jsonPosts.map(post => ({
             title: post.title,
             body: post.content,
             planet: post.planet,
             enemy: post.enemy,
-            urgency: post.urgency
-          }))
-          setPosts(formattedPosts)
+            urgency: post.urgency,
+            date: post.fecha
+          }));
+          setPosts(formattedPosts);
         } catch (error) {
-          console.error("Error fetching posts:", error)
+          console.error("Error fetching posts:", error);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
-      }
+      };
 
       React.useEffect(() => {
         getPosts()
@@ -141,7 +149,7 @@
 
       return (
         <ul style={styles}>
-          {posts.map(({ title, body, planet, enemy, urgency }, index) => (
+          {posts.map(({ title, body, planet, enemy, urgency, date }, index) => (
             <Post
               key={index}
               title={title}
@@ -149,6 +157,7 @@
               planet={planet}
               enemy={enemy}
               urgency={urgency}
+              date={date}
             />
           ))}
         </ul>
