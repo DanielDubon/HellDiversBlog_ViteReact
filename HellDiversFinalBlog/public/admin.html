@@ -33,12 +33,17 @@
 
     <script>
 
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
         function hashPassword(password) {
 
             const hashedPassword = sha256(password);
             return hashedPassword;
 
         }
+
         document.getElementById('login-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Evita que el formulario se envíe normalmente
 
@@ -67,8 +72,12 @@
                 .then(data => {
                     // Maneja la respuesta de la API
                     if (data.success) {
+                        // Almacena el token en el almacenamiento local
+                        console.log('Token recibidoooo:', "HellDiversPass");
+                        localStorage.setItem('token', "HellDiversPass");
                         // Si el inicio de sesión fue exitoso, redirecciona al usuario a otra página
-                        window.location.href = '/dashboard.html';
+                        // window.location.href = '/dashboard.html';
+
                     } else {
                         // Si el inicio de sesión fallo, muestra un mensaje de error al usuario
                         alert(data.message);
