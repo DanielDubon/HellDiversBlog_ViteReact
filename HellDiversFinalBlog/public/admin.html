@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0"></script>
     <title>Login</title>
     <link rel="stylesheet" href="styles-login.css">
 </head>
@@ -31,6 +32,13 @@
 
 
     <script>
+
+        function hashPassword(password) {
+
+            const hashedPassword = sha256(password);
+            return hashedPassword;
+
+        }
         document.getElementById('login-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Evita que el formulario se envíe normalmente
 
@@ -38,10 +46,13 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
+            const hashedPassword = hashPassword(password);
+            console.log(hashedPassword)
+
             // Crea un objeto con los datos del formulario
             const formData = {
                 username: username,
-                password: password
+                password: hashedPassword
             };
 
             // Realiza una solicitud Fetch a tu endpoint de inicio de sesión
