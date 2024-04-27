@@ -99,31 +99,6 @@ Con Super Earth Blog: Helldivers HQ, mantente actualizado con las últimas noved
 5. No ejecutes el proyecto desde un enlace simbólico. Puede causar problemas con la observación de archivos.
 6. Elimina cualquier .eslintrc que tengas almacenado en tu directorio de usuario. Además, desactiva cualquier plugin/regla personalizada de ESLint que hayas habilitado dentro de tu editor. Estos entrarán en conflicto con las reglas de ESLint definidas en este proyecto.
 7. Asegúrate de que no tienes NODE_ENV configurado en producción en tu máquina. Si lo haces, las [dependencias de desarrollo no se instalarán](https://github.com/coryhouse/react-slingshot/issues/400#issuecomment-290497767). Aquí tienes [cómo verificarlo](http://stackoverflow.com/a/27939821/26180).
-8. Instala watchman con `brew install watchman` si estás teniendo el siguiente error después de un `npm start -s` inicial:
-
-    ```bash
-    2017-09-05 00:44 node[68587] (FSEvents.framework) FSEventStreamStart: register_with_server: ERROR: f2d_register_rpc() => (null) (-22)
-    2017-09-05 00:44 node[68587] (FSEvents.framework) FSEventStreamStart: register_with_server: ERROR: f2d_register_rpc() => (null) (-22)
-    events.js:160
-          throw er; // Unhandled 'error' event
-          ^
-
-    Error: Error watching file for changes: EMFILE
-        at exports._errnoException (util.js:1022:11)
-        at FSEvent.FSWatcher._handle.onchange (fs.js:1406:11)
-    ```
-
-9. Consejo: Cosas que revisar si obtienes un error `npm run lint` o error de compilación:
-
-    * Si ESW encontró un error o advertencia en tu proyecto (por ejemplo, una declaración de consola o un punto y coma faltante), el hilo de linterna se cerrará con `Estado de salida 1`. Para corregir:
-
-      1. Cambia el script `npm run lint` a `"esw webpack.config.* src tools; exit 0"`
-      1. Cambia el script `npm run lint:watch` a `"esw webpack.config.* src tools --watch; exit 0"`
-
-      > Nota: Agregar `exit 0` permitirá que los scripts de npm ignoren el estado 1 y permitan a ESW imprimir todas las advertencias y errores.
-    * Asegúrate de que la versión global de `eslint`/`esw` instalada coincida con la versión utilizada en el proyecto. Esto asegurará que la palabra clave `esw` se resuelva.
-
-10. Vuelve a construir node-sass con `npm rebuild node-sass` si tienes un error como `Node Sass does not yet support your current environment on macOS XXX` después de un `npm start -s` inicial.
 
 ---
 
